@@ -29,6 +29,7 @@ $(() => {
     })
 
 
+    //display room number when received from the server
     socket.on('roomInfo', (roomNum) => {
         $(".roomDisp").text(`Room Number: ${roomNum}`);
         currentRoom = roomNum;

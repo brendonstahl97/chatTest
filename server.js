@@ -20,16 +20,16 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './Assets/html/landing.html'));
 });
 
+//On navigation to /host, generate a random room number and send chat page
 app.get('/host', (req, res) => {
     res.sendFile(path.join(__dirname, './Assets/html/index.html'));
     roomNum = Math.floor(Math.random() * 9999).toString();
 });
 
+//on navigation to /join/roomNumber set the room number to the query parameter and then send the index.js file
 app.get('/join/:roomNumber', (req,res) => {
     res.sendFile(path.join(__dirname, './Assets/html/index.html'));
-    console.log('Params Val: ', req.params.roomNumber);
     roomNum = req.params.roomNumber;
-    console.log('Room Number: ', roomNum);
 });
 
 
@@ -37,9 +37,11 @@ app.get('/join/:roomNumber', (req,res) => {
 //When socket from front-end connects
 io.on('connection', (socket) => {
     
+    //join specified room
     socket.join(roomNum);
     console.log(`a user connected to room ${roomNum}`);
 
+    //send room number info to every user in a room
     io.to(roomNum).emit('roomInfo', roomNum);
 
     //when socket disconnects
@@ -54,7 +56,6 @@ io.on('connection', (socket) => {
         io.to(msg.room).emit('chat', msg);
 
     });
-
 });
 
 
